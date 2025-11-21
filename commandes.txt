@@ -1,0 +1,10 @@
+Vite compile votre code React 
+========package.json======================================
+Fichier de configuration de projet react 
+Node.js est un outils 
+=========================================================
+npm run dev
+npm run build    # Compile pour la production
+npm run preview  # Prévisualise la version compilée
+npm run lint     # Vérifie la qualité du code
+npm install permet d'installer tous les dépendances que j'ai dans mon package.json.
