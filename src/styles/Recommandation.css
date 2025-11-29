@@ -1,0 +1,558 @@
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #fff5f0 0%, #ffffff 50%, #fff0f0 100%);
+  min-height: 100vh;
+}
+.header-container {
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header{
+    display: flex;
+    gap:15px;
+
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.header-title img {
+  width: 40px;
+  height: 40px;
+}
+
+.header-title h1 {
+  font-size: 28px;
+  color: #333;
+  font-weight: 700;
+}
+
+.header-preferences {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.header-preferences i {
+  color: #ff6b35;
+}
+
+/* ============================================
+   BARRE DE RECHERCHE
+============================================ */
+.search-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-container input {
+  width: 100%;
+  padding: 15px 50px 15px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.search-container input:focus {
+  border-color: #ff6b35;
+  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+}
+
+.search-container span {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 18px;
+}
+
+/* ============================================
+   GRILLE DES CARTES DE RECETTES
+============================================ */
+.recipes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ============================================
+   CARTE DE RECETTE
+============================================ */
+.recipe-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.recipe-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Image de la recette */
+.recipe-card-image {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.recipe-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.recipe-card:hover .recipe-card-image img {
+  transform: scale(1.1);
+}
+
+/* Badge de score AI */
+.ai-score-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+.ai-score-badge i {
+  font-size: 16px;
+}
+
+/* Boutons Like et Favoris */
+.action-buttons {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-like,
+.btn-commit {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+ 
+}
+
+.btn-like:hover{
+    background-color: rgb(177, 21, 34);
+}
+
+.btn-favorite:hover {
+     background-color: rgb(207, 164, 70);
+}
+
+.btn-like i {
+  color: #999;
+  font-size: 18px;
+}
+
+.btn-like.active {
+  background: #ff4757;
+}
+
+.btn-like.active i {
+  color: white;
+}
+
+.btn-favorite i {
+  color: #999;
+  font-size: 18px;
+}
+
+.btn-favorite.active {
+  background: #ff6b35;
+}
+
+.btn-favorite.active i {
+  color: white;
+}
+
+/* Contenu de la carte */
+.recipe-card-content {
+  padding: 20px;
+}
+
+.recipe-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Informations (temps et difficulté) */
+.recipe-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.recipe-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.recipe-time i {
+  color: #ff6b35;
+}
+
+.difficulty-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.difficulty-badge.easy {
+  background: #d4edda;
+  color: #155724;
+}
+
+.difficulty-badge.medium {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.difficulty-badge.hard {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Étoiles de notation */
+.recipe-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.recipe-rating i {
+  color: #ffd700;
+  font-size: 16px;
+}
+
+.recipe-rating i.empty {
+  color: #ddd;
+}
+
+.recipe-rating span {
+  color: #666;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+/* Bouton Voir la recette */
+.btn-view-recipe {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-view-recipe:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+}
+
+/* ============================================
+   MODAL - DÉTAILS DE LA RECETTE
+============================================ */
+#DetailCart {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+#DetailCart.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 24px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Bouton fermer */
+.btn-close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  z-index: 10;
+}
+
+.btn-close-modal:hover {
+  transform: rotate(90deg);
+  background: #f5f5f5;
+}
+
+.btn-close-modal i {
+  font-size: 20px;
+  color: #333;
+}
+
+/* Image de la modal */
+.modal-image {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 24px 24px 0 0;
+}
+
+/* Contenu de la modal */
+.modal-body {
+  padding: 40px;
+}
+
+.modal-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.modal-info {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.modal-time {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #666;
+  font-size: 16px;
+}
+
+.modal-time i {
+  color: #ff6b35;
+  font-size: 20px;
+}
+
+.modal-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.modal-rating i {
+  color: #ffd700;
+  font-size: 20px;
+}
+
+.modal-rating span {
+  color: #666;
+  font-size: 16px;
+  margin-left: 8px;
+}
+
+/* Section Ingrédients */
+.ingredients-section {
+  margin-bottom: 35px;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-title i {
+  color: #ff6b35;
+}
+
+
+
+.instructions-text {
+  background: #f9f9f9;
+  padding: 25px;
+  border-radius: 15px;
+  color: #555;
+  font-size: 16px;
+  line-height: 1.8;
+  border-left: 4px solid #ff6b35;
+}
+
+/* Boutons d'étoiles pour noter */
+.rating-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 30px;
+  padding: 20px;
+  background: #fff8f5;
+  border-radius: 15px;
+}
+
+.rating-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-right: 10px;
+}
+
+.star-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 5px;
+}
+
+.star-button i {
+  font-size: 28px;
+  color: #ddd;
+  transition: all 0.2s ease;
+}
+
+.star-button:hover i,
+.star-button.active i {
+  color: #ffd700;
+  transform: scale(1.2);
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 768px) {
+  .recipes-grid {
+    grid-template-columns: 1fr;
+    padding: 20px 15px;
+  }
+
+  .header-title h1 {
+    font-size: 22px;
+  }
+
+  .modal-body {
+    padding: 25px;
+  }
+
+  .modal-title {
+    font-size: 26px;
+  }
+
+  .modal-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
+
+/* ============================================
+   SCROLLBAR PERSONNALISÉE
+============================================ */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: #ff6b35;
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #ff5722;
+}
