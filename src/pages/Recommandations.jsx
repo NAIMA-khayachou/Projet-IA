@@ -47,7 +47,7 @@ const Recommandations = () => {
   
   try {
     const response = await fetchWithRetry(
-      `http://127.0.0.1:8000/api/recommandations/?query=${encodeURIComponent(query)}`,
+       `http://localhost:8000/api/recommandations/?query=${encodeURIComponent(query)}`,
       {
         method: 'GET',
         headers: {
