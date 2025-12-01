@@ -1,6 +1,7 @@
 import React from 'react';
 import '../styles/Recommandation.css';
 import Recommander from '../assets/images.jpg'
+import './Recommandations.css';
 import {useState} from "react"
 
 
@@ -8,6 +9,57 @@ const Recommandations = () => {
     const [query, setQuery] = useState(""); // state pour stocker la recherche
     const [results, setResults] = useState([]);
     const [selectedRecette, setSelectedRecette] = useState(null); // ← AJOUTÉ
+    // predict_images
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+  // --- NOUVELLE FONCTION: handleImageUpload ---
+  const handleImageUpload = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setImageFile(file);
+            // Créer un aperçu pour l'affichage
+            setImagePreview(URL.createObjectURL(file));
+            
+            // Lancer la prédiction immédiatement après la sélection
+            predictImage(file);
+        }
+    };
+
+    const predictImage = (file) => {
+        setIsUploading(true);
+        setResults([]); // Optionnel: Vider les anciens résultats textuels
+
+        const formData = new FormData();
+        formData.append('image', file);
+
+        fetch('http://127.0.0.1:8000/api/predict-image/', {
+            method: 'POST',
+            body: formData,
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log("✅ Prédiction ML et Recommandations reçues:", data);
+                
+                // Mettre à jour la grille avec les recommandations basées sur l'image
+                setResults(data.recommendations || []);
+                // Optionnel: Mettre à jour la barre de recherche avec la requête prédite
+                setQuery(data.prediction_query || "");
+            })
+            .catch((error) => {
+                console.error("❌ Erreur lors de la prédiction par image:", error);
+                alert("Erreur lors de la prédiction: " + error.message);
+            })
+            .finally(() => {
+                setIsUploading(false);
+            });
+    };
+// ---------------------------------------------
 
   const handleSearch = () => {
     if(!query.trim()) return;
@@ -52,12 +104,51 @@ const Recommandations = () => {
         </div>
       </div>
 
+      // --- BLOC JSX DANS LE RETURN (entre search-container et recipes-grid) ---
+        {/* Carte d'Upload d'Image */}
+        <div className="upload-card">
+            <div className="upload-content">
+                <input 
+                    type="file" 
+                    id="image-upload-input" 
+                    accept="image/*" 
+                    style={{ display: 'none' }} 
+                    onChange={handleImageUpload}
+                    disabled={isUploading}
+                />
+                
+                {imagePreview ? (
+                    <div className="image-preview-container">
+                        <img src={imagePreview} alt="Aperçu de la recette" className="image-preview"/>
+                        <p className="upload-text">Image sélectionnée. Recherche en cours...</p>
+                    </div>
+                ) : (
+                    <label htmlFor="image-upload-input" className="upload-label">
+                        <i className="fa-solid fa-camera upload-icon"></i>
+                        <p className="upload-text">
+                            **OU** <br /> **Recherchez par image** pour trouver la recette !
+                        </p>
+                    </label>
+                )}
+
+                {isUploading && (
+                    <div className="loading-overlay">
+                        <i className="fa-solid fa-spinner fa-spin"></i>
+                        <p>Analyse de l'image...</p>
+                    </div>
+                )}
+            </div>
+        </div>
+// ------------------------------------------------------------------------
+
       {/* Grille des recettes */}
       <div className="recipes-grid">
         {results.length === 0 ? (
           <p style={{textAlign: 'center', fontSize: '18px', color: '#666'}}>
             Recherchez une recette pour voir les résultats...
+            
           </p>
+          
         ) : (
           results.map((recette, index) => (
             <div key={index} className="recipe-card">
@@ -68,6 +159,7 @@ const Recommandations = () => {
                   alt={recette.name || 'Recette'}
                   onError={(e) => { e.target.src = Recommander; }}
                 />
+                
                 
                 {/* Boutons Like et Favoris */}
                 <div className="action-buttons">
@@ -187,8 +279,10 @@ const Recommandations = () => {
                   </button>
                 </div>
               </div>
+              
             </>
           )}
+          
         </div>
       </div>
     </div>
