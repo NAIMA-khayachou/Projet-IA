@@ -6,9 +6,12 @@ import {useState} from "react"
 
 
 const Recommandations = () => {
-    const [query, setQuery] = useState(""); // state pour stocker la recherche
+    const [query, setQuery] = useState("");
     const [results, setResults] = useState([]);
-    const [selectedRecette, setSelectedRecette] = useState(null); // ← AJOUTÉ
+
+    const [selectedRecette, setSelectedRecette] = useState(null); 
+    const [loading, setLoading] = useState(false); // ← AJOUTÉ
+    const [error, setError] = useState(null); // ← AJOUTÉ// ← AJOUTÉ
     // predict_images
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
@@ -61,26 +64,69 @@ const Recommandations = () => {
     };
 // ---------------------------------------------
 
-  const handleSearch = () => {
-    if(!query.trim()) return;
+
+  const handleSearch = async () => {
+  if(!query.trim()) return;
+  
+  setLoading(true);
+  setError(null);
+  console.log("🔍 Recherche lancée pour:", query);
+  
+  // 🔄 Fonction de retry avec 3 tentatives
+  const fetchWithRetry = async (url, options, retries = 3, delay = 1000) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        console.log(`🔄 Tentative ${i + 1}/${retries}...`);
+        const response = await fetch(url, options);
+        
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        
+        return response; // ✅ Succès !
+      } catch (error) {
+        console.warn(`⚠️ Tentative ${i + 1} échouée:`, error.message);
+        
+        // Si c'est la dernière tentative, on relance l'erreur
+        if (i === retries - 1) {
+          throw error;
+        }
+        
+        // Sinon, on attend avant de réessayer
+        console.log(`⏳ Attente de ${delay}ms avant nouvelle tentative...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  };
+  
+  try {
+    const response = await fetchWithRetry(
+       `http://localhost:8000/api/recommandations/?query=${encodeURIComponent(query)}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+      }
+    );
     
-    console.log("🔍 Recherche lancée pour:", query);
+    console.log("📡 Réponse reçue, status:", response.status);
     
-    fetch(`http://127.0.0.1:8000/api/recommandations/?query=${query}`)
-        .then((response) => {
-            console.log("📡 Réponse reçue, status:", response.status);
-            return response.json();
-        })
-        .then((data) => {
-            console.log("✅ Données reçues:", data);
-            console.log("📊 Nombre de résultats:", data.count);
-            console.log("📝 Résultats:", data.results);
-            setResults(data.results);
-        })
-        .catch((error) => {
-            console.error("❌ Erreur:", error);
-        })
+    const data = await response.json();
+    console.log("✅ Données reçues:", data);
+    console.log("📊 Nombre de résultats:", data.count);
+    console.log("📝 Résultats:", data.results);
+    
+    setResults(data.results);
+  } catch (error) {
+    console.error("❌ Erreur finale après 3 tentatives:", error);
+    setError("Impossible de se connecter au serveur. Assurez-vous que Django est démarré.");
+  } finally {
+    setLoading(false);
   }
+};
+
 
   const AfficheCart = (recette) => {  // ← MODIFIÉ: ajout du paramètre
     setSelectedRecette(recette);      // ← AJOUTÉ: stockage de la recette

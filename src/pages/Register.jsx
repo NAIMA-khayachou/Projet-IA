@@ -1,7 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import '../styles/Register.css';
 const Register = () => {
+   const[username,setusername]=useState("")
+   const[email,setemail]=useState("")
+   const[password,setpassword]=useState("")
+   const[confirmpassword,setconfrimpassword]=useState("")
+  function stockerBase(){
+       const data={
+         'email':email,
+         'username':username,
+         'password':password
+       }
+       const response=fetch("http://127.0.0.1:8000/utilisateurs/",{
+        method:"Post",
+       })
+  }
   return (
     <div className="register-container">
       <div className="register-card">
@@ -17,6 +31,8 @@ const Register = () => {
               name="email" 
               placeholder="votre@email.com"
               required 
+              value={email}
+              onChange={(e)=setNom(e.target.value)}
             />
           </div>
 
@@ -27,6 +43,8 @@ const Register = () => {
               id="username" 
               name="username" 
               placeholder="Votre nom d'utilisateur"
+              value={username}
+              onChange={(e)=setusername(e.target.value)}
               required 
             />
           </div>
@@ -38,6 +56,8 @@ const Register = () => {
               id="password" 
               name="password" 
               placeholder="••••••••"
+               value={password}
+              onChange={(e)=setpassword(e.target.value)}
               required 
             />
           </div>
@@ -49,11 +69,13 @@ const Register = () => {
               id="confirm-password" 
               name="confirm-password" 
               placeholder="••••••••"
+               value={password}
+              onChange={(e)=setconfrimpassword(e.target.value)}
               required 
             />
           </div>
 
-          <button type="submit" className="register-btn">
+          <button type="submit" className="register-btn" onClick={stockerBase}>
             S'inscrire
           </button>
         </form>
